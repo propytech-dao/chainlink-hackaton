@@ -6,13 +6,13 @@ const { networks } = require("../networks")
 const { ResponseListener, decodeResult, ReturnType } = require("@chainlink/functions-toolkit")
 const { providers } = require("ethers")
 
-const subscriptionId = "TODO" // TODO @dev update this  to show your subscription Id
+const subscriptionId = "1" // TODO @dev update this  to show your subscription Id
 
 if (!subscriptionId || isNaN(subscriptionId)) {
   throw Error("Please update the subId variable in scripts/listen.js to your subscription ID.")
 }
 
-const networkName = "polygonMumbai" // TODO @dev update this to your network name
+const networkName = "localFunctionsTestnet" // TODO @dev update this to your network name
 
 // Mount Response Listener
 const provider = new providers.JsonRpcProvider(networks[networkName].url)

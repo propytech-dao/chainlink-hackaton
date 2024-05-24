@@ -4,6 +4,7 @@ const fs = require("fs")
 const { startLocalFunctionsTestnet } = require("@chainlink/functions-toolkit")
 const { utils, Wallet } = require("ethers")
 // Loads environment variables from .env.enc file (if it exists)
+// @ts-ignore
 require("@chainlink/env-enc").config("../.env.enc")
 ;(async () => {
   const requestConfigPath = path.join(process.cwd(), "Functions-request-config.js") // @dev Update this to point to your desired request config file
@@ -15,7 +16,7 @@ require("@chainlink/env-enc").config("../.env.enc")
       logging: {
         debug: false,
         verbose: false,
-        quiet: true, // Set this to `false` to see logs from the local testnet
+        quiet: false, // Set this to `false` to see logs from the local testnet
       },
     } // Ganache server options (optional)
   )
