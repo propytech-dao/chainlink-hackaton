@@ -14,6 +14,14 @@ npx hardhat functions-request --network ethereumSepolia --contract 0xb1D07639645
 ```
 
 
+<!-- 
+TODO: setup, a lend contract, make the fulfillment for the NFC/RFC/Qr code setup.
+
+ -->
+
+
+
+
 ### other tools
 
 If necessary, it is possible to mine Sepolia Eth here: https://www.ethereum-ecosystem.com/faucets/ethereum-sepolia
