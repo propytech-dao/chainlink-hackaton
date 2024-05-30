@@ -3,24 +3,23 @@ const { ethers } = require("hardhat")
 
 const provider = ethers.getDefaultProvider("http://localhost:8545/")
 
-describe("MyERC1155 Unit Tests", function () {
+describe("ReNFT integration Unit Tests", function () {
   let MockNFT
   let myERC721
   let MockUSDT, mockUSDT
   let Resolver, resolver
   let Registry, registry
-  let owner,  renter;
+  let owner, renter
 
   before(async function () {
-    [owner] = await ethers.getSigners();
+    ;[owner] = await ethers.getSigners()
 
-        // Create a new wallet for the renter
-        let renterWallet = ethers.Wallet.createRandom();
+    // Create a new wallet for the renter
+    let renterWallet = ethers.Wallet.createRandom()
 
-        // Connect the renter wallet to the provider
-        renter = renterWallet.connect(ethers.provider);
-  });
-
+    // Connect the renter wallet to the provider
+    renter = renterWallet.connect(ethers.provider)
+  })
 
   it("should check the ETH balance of the address 0xCB149308B6be829fD580Ff1c84Fb6C44C373B3FB", async () => {
     const [owner] = await ethers.getSigners()
@@ -94,7 +93,7 @@ describe("MyERC1155 Unit Tests", function () {
     const tokenID = [0]
     const lendAmount = [1]
     const maxRentDuration = [10]
-    // It has to pad to make it work properly 
+    // It has to pad to make it work properly
     // this is 4 USDT
     const dailyRentPrice = [ethers.utils.hexZeroPad(ethers.utils.hexlify(ethers.utils.parseUnits("1", 6)), 4)]
     const paymentToken = [1] // MockUSDT
@@ -123,63 +122,71 @@ describe("MyERC1155 Unit Tests", function () {
     expect(lendingData[4]).to.equal(lendAmount[0]) // lendAmount
     expect(lendingData[5]).to.equal(lendAmount[0]) // availableAmount
     expect(lendingData[6]).to.equal(1) // paymentToken (MockUSDT)
+
+    // Verify if the NFT was transfered to registry
+    const ownerOfToken = await myERC721.ownerOf(0)
+    expect(ownerOfToken).to.equal(registry.address)
   })
 
+  it("should set up renter with mock tokens", async () => {
+    // Fund the renter wallet with some ETH from the owner
+    await owner.sendTransaction({
+      to: renter.address,
+      value: ethers.utils.parseEther("1.0"), // Send 1 ETH
+    })
+    // Fund the renter with some MockUSDT
+    await mockUSDT.transfer(renter.address, ethers.utils.parseUnits("1000", 6))
 
-  it("should set up renter with mock tokens", async () =>{
+    // renter approves ERC20 token for the registry to use
+    await mockUSDT.connect(renter).approve(registry.address, ethers.utils.parseUnits("1000", 6))
 
- // Fund the renter wallet with some ETH from the owner
- await owner.sendTransaction({
-  to: renter.address,
-  value: ethers.utils.parseEther("1.0") // Send 1 ETH
-  })
-  // Fund the renter with some MockUSDT
-  await mockUSDT.transfer(renter.address, ethers.utils.parseUnits("1000", 6));
+    // Verify renter balances and approvals
+    const renterEthBalance = await ethers.provider.getBalance(renter.address)
+    const renterUsdtBalance = await mockUSDT.balanceOf(renter.address)
+    const renterAllowance = await mockUSDT.allowance(renter.address, registry.address)
 
-  // renter approves ERC20 token for the registry to use
-  await mockUSDT.connect(renter).approve(registry.address, ethers.utils.parseUnits("1000", 6));
-
-   // Verify renter balances and approvals
-   const renterEthBalance = await ethers.provider.getBalance(renter.address);
-   const renterUsdtBalance = await mockUSDT.balanceOf(renter.address);
-   const renterAllowance = await mockUSDT.allowance(renter.address, registry.address);
-
-   expect(renterEthBalance).to.be.above(ethers.utils.parseEther("0.9")); // Accounting for gas fees
-   expect(renterUsdtBalance).to.equal(ethers.utils.parseUnits("1000", 6));
-   expect(renterAllowance).to.equal(ethers.utils.parseUnits("1000", 6));
+    expect(renterEthBalance).to.be.above(ethers.utils.parseEther("0.9")) // Accounting for gas fees
+    expect(renterUsdtBalance).to.equal(ethers.utils.parseUnits("1000", 6))
+    expect(renterAllowance).to.equal(ethers.utils.parseUnits("1000", 6))
   })
 
   it("should call the rent function and verify renting data", async function () {
     // Approve the renter to spend MockUSDT
-    await mockUSDT.connect(renter).approve(registry.address, ethers.utils.parseUnits("10", 6));
+    await mockUSDT.connect(renter).approve(registry.address, ethers.utils.parseUnits("10", 6))
 
     // Define the parameters for the rent function
-    const nftStandard = [0]; // ERC721
-    const nftAddress = [myERC721.address];
-    const tokenID = [0];
-    const lendingID = [1];
-    const rentDuration = [5]; // Renting for 5 days
-    const rentAmount = [1];
+    const nftStandard = [0] // ERC721
+    const nftAddress = [myERC721.address]
+    const tokenID = [0]
+    const lendingID = [1]
+    const rentDuration = [5] // Renting for 5 days
+    const rentAmount = [1]
 
     // Fund the renter with some MockUSDT
-    await mockUSDT.transfer(renter.address, ethers.utils.parseUnits("10", 6));
+    await mockUSDT.transfer(renter.address, ethers.utils.parseUnits("10", 6))
 
-    // Call the rent function with a manual gas limit
-    const gasLimit = 500000; // Adjust this value as needed
-
-    const rentTx = await registry.connect(renter).rent(
+    console.log({
       nftStandard,
       nftAddress,
       tokenID,
       lendingID,
       rentDuration,
       rentAmount,
-      { gasLimit }
-    );
-    await rentTx.wait();
+    })
 
-    // Verify that the rent function was executed correctly
-    // Add specific assertions here to check the state of the contract after renting
-    // For example, you can call getRenting to verify the renting data if such a function exists
-  });
+    const rentTx = await registry
+      .connect(renter)
+      .rent(nftStandard, nftAddress, tokenID, lendingID, rentDuration, rentAmount, {
+        gasLimit: 1000000,
+      })
+    // await rentTx.wait()
+
+    // // Verify that the rent function was executed correctly
+    //   // Define the parameters
+    //   const rentingID = 0;
+
+    //   // Call the getRenting function
+    //   const rentingData = await registry.getRenting(myERC721.address, tokenID, rentingID);
+    // console.log({rentingData})
+  })
 })

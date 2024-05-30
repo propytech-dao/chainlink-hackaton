@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "hardhat/console.sol";
+import "openzeppelin-contracts-4.3/token/ERC20/ERC20.sol";
+import "openzeppelin-contracts-4.3/token/ERC20/IERC20.sol";
+import "openzeppelin-contracts-4.3/token/ERC20/utils/SafeERC20.sol";
+import "openzeppelin-contracts-4.3/token/ERC721/IERC721.sol";
+import "openzeppelin-contracts-4.3/token/ERC721/utils/ERC721Holder.sol";
+import "openzeppelin-contracts-4.3/token/ERC1155/IERC1155.sol";
+import "openzeppelin-contracts-4.3/token/ERC1155/utils/ERC1155Holder.sol";
+import "openzeppelin-contracts-4.3/token/ERC1155/utils/ERC1155Receiver.sol";
 
 import "./interfaces/IRegistry.sol";
 
@@ -33,7 +32,7 @@ import "./interfaces/IRegistry.sol";
 //                   @@@@@@@@@@@@@@@@&        @@@@@@@@@@@@@@@@
 //                   @@@@@@@@@@@@@@@@&        @@@@@@@@@@@@@@@@
 
-contract Registry is IRegistry, ERC721Holder, IERC1155Receiver, ERC1155Holder {
+contract Registry is IRegistry, ERC721Holder, ERC1155Receiver, ERC1155Holder {
   using SafeERC20 for ERC20;
 
   IResolver private resolver;

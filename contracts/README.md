@@ -1,11 +1,21 @@
 # Smart contracts
 
-This repo contains all solutions of the smart contracts.
+This repo contains all solutions of the smart contracts. For clarification, we copied the
+code from [ReNFT sylvester-v1](https://github.com/re-nft/contracts-sylvester) to showcase
+an example using their protocol. But we also defined a simpler renting protocol called `SimpleRent`, which is 
+the contract the front-end is integrated to.
+
+Ideally, our solution would not depend on the lending protocol being used to rent. However, depending
+on the lending protocol, it is necessary to change the `FunctionsConsumer` to make the adequate checks.
+
+
+
+### Common and reusable commands
 
 For now, the consumer address is `0xb1D0763964511f57e5d70362b283765b6159331` in Ethereum Sepoila
 the subscription ID is: `2632`
 
-Common used:
+1. To interact with deployed functions consumer
 
 ```
 npx hardhat functions-read --contract 0xb1D0763964511f57e5d70362b283765b61593310  --network ethereumSepolia
@@ -13,43 +23,40 @@ npx hardhat functions-read --contract 0xb1D0763964511f57e5d70362b283765b61593310
 npx hardhat functions-request --network ethereumSepolia --contract 0xb1D0763964511f57e5d70362b283765b61593310 --subid 2632
 ```
 
-<!--
-TODO: setup, a lend contract, make the fulfillment for the NFC/RFC/Qr code setup.
-
- -->
-
 ### other tools
 
 If necessary, it is possible to mine Sepolia Eth here: https://www.ethereum-ecosystem.com/faucets/ethereum-sepolia
 
 ### Testing
 
-Using the `localFunctionsTestnet`, first to deploy the consumer contract:
+1. First, start the `localFunctionsTestnet` with `npm run startLocalFunctionsTestnet`.
+
+2.  Using the `localFunctionsTestnet`, deploy the consumer contract:
 
 ```
 npx hardhat functions-deploy-consumer --network localFunctionsTestnet
 ```
 
-Update the DON ID for the consumer contract that was just deployed (not sure if required?):
+3. Update the DON ID for the consumer contract that was just deployed (not sure if required?):
 
 ```
 npx hardhat functions-set-donid --network localFunctionsTestnet --contract <contract-address>
 ```
 
-Fund the subscription:
+4. Fund the subscription:
 
 ```
 npx hardhat functions-sub-create --network localFunctionsTestnet --amount 10 --contract <contract-address>
 ```
 
-Then, with the contract deployed and subid set it is possible to call it's address with a `sendRequest`, as follows.
+5. Then, with the contract deployed and subid set it is possible to call it's address with a `sendRequest`, as follows.
 It will
 
 ```
 npx hardhat functions-request --network localFunctionsTestnet --contract <contract-address> --subid 1
 ```
 
-Lastly, it is possible to read value sent to the contract:
+6. Lastly, it is possible to read value sent to the contract:
 
 ```
 npx hardhat functions-read	--network localFunctionsTestnet --contract _address
