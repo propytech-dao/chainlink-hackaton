@@ -62,3 +62,5 @@ Lastly, it is possible to read value sent to the contract:
 npx hardhat functions-read	--network localFunctionsTestnet --contract _address 
 ```
 
+**Notice that all the tests depend on the correct setup of all the scripts above.** The tests
+run specifically in the `localFunctionsTestnet` and nowhere else because it is hardcoded into this testnet.

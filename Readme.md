@@ -13,3 +13,17 @@ verify user data before check-in, assign physical NFC keys to open the doors and
 
 Using the front-end, users are able to rent paying in cryptocurrency and to check-in after the payment is done. The check-in calls a Chainlink Function to interact
 with the off-chain PMS. Notice that the PMS being able to be synced with the contract means that the same property could be rented both in legacy systems and smart contracts, without ending up in a "duplicate buy" scenario, since 
+
+
+## Challenges we ran into
+
+- Creating and integrating to lending protocols is hard. Even though ReNFT does most of the heavy lifting, we wanted to create
+the protocol in a way that it is not dependent on a specific renting protocol, but rather has interfaces that abstract accordingly.
+
+- Handling Chainlink functions has a lot of steps. Thankfully, the [Chainlink functions starter kit](https://github.com/smartcontractkit/functions-hardhat-starter-kit) is useful for handling it all in a testnet. However, we found it was hard to integrate test scripts in it. 
+
+
+## How we built it
+
+We used ReNFT from version Sylverster V1 to handle renting and lending logic for us.
+
