@@ -19,6 +19,8 @@
     "@types/node": "20.8.3",
     "@types/react": "18.2.25",
     "@types/react-dom": "18.2.11",
+    "@wagmi/connectors": "^5.0.7",
+    "@wagmi/core": "^2.10.5",
     "autoprefixer": "10.4.16",
     "eslint": "8.51.0",
     "eslint-config-next": "13.5.4",
@@ -30,6 +32,10 @@
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
     "ts-node": "^10.9.1",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "viem": "2.x"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
   }
 }
