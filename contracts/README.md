@@ -64,3 +64,6 @@ npx hardhat functions-read	--network localFunctionsTestnet --contract _address
 
 **Notice that all the tests depend on the correct setup of all the scripts above.** The tests
 run specifically in the `localFunctionsTestnet` and nowhere else because it is hardcoded into this testnet.
+
+Another annoying thing on testing is that it is necessary to setup the env vars for every terminal with `npx env-enc set-pw`. So keep
+that in mind.
