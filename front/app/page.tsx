@@ -1,3 +1,15 @@
+'use client'
+
+import {
+  type BaseError,
+  useAccount,
+  useAccountEffect,
+  useChainId,
+  useConnect,
+  useDisconnect,
+  useEnsName,
+} from 'wagmi'
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
@@ -8,8 +20,21 @@ import ExpandingArrow from '@/components/expanding-arrow';
 export const dynamic = 'force-dynamic';
 
 export default function Home() {
+  useAccountEffect({
+    onConnect(_data) {
+      // console.log('onConnect', data)
+    },
+    onDisconnect() {
+      // console.log('onDisconnect')
+    },
+  })
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center">
+      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+        <Connect />
+      </div>
+      
       <Link
         href="https://vercel.com/templates/next.js/postgres-prisma"
         className="group mt-20 sm:mt-0 rounded-full flex space-x-1 bg-white/30 shadow-sm ring-1 ring-gray-900/5 text-gray-600 text-sm font-medium px-10 py-2 hover:shadow-lg active:shadow-sm transition-all"
@@ -93,5 +118,28 @@ export default function Home() {
         </Link>
       </div>
     </main>
+  );
+}
+
+
+function Connect() {
+  const chainId = useChainId();
+  const { connectors, connect, status, error } = useConnect();
+  const thirdConnector = connectors[2];
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <p>connect</p>
+      {thirdConnector && (
+        <button
+          className="button-blue"
+          key={thirdConnector.uid}
+          onClick={() => connect({ connector: thirdConnector, chainId })}
+          type="button"
+        >
+          {thirdConnector.name}
+        </button>
+      )}
+    </div>
   );
 }

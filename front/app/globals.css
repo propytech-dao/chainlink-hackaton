@@ -10,3 +10,28 @@
 body {
   color: rgb(var(--foreground-rgb));
 }
+
+
+.button-blue {
+  background-color: #007BFF; /* Azul padrão */
+  color: white;              /* Texto branco */
+  border: none;              /* Sem bordas */
+  padding: 5px 10px;        /* Espaçamento interno */
+  font-size: 16px;           /* Tamanho da fonte */
+  border-radius: 5px;        /* Bordas arredondadas */
+  cursor: pointer;           /* Cursor de mão ao passar o mouse */
+  transition: background-color 0.3s; /* Transição suave para hover */
+}
+
+.button-blue:hover {
+  background-color: #0056b3; /* Azul escuro ao passar o mouse */
+}
+
+.button-blue:focus {
+  outline: none;              /* Remove o contorno padrão */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* Sombra para indicar foco */
+}
+
+.button-blue:active {
+  background-color: #004085; /* Azul mais escuro ao clicar */
+}
