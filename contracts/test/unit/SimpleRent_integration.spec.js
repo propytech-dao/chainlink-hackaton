@@ -1,7 +1,13 @@
 const { assert, expect } = require("chai")
 const { ethers } = require("hardhat")
 
-const provider = ethers.getDefaultProvider("http://localhost:8545/")
+const dotenv = require("dotenv");
+
+dotenv.config({ path: '.env.test' });
+const provider = ethers.getDefaultProvider(process.env.PROVIDER_URL);
+
+console.log("provider url: " ,process.env.PROVIDER_URL)
+
 
 describe("SimpleRent integration Unit Tests", function () {
   let MockNFT, mockNFT
@@ -10,7 +16,7 @@ describe("SimpleRent integration Unit Tests", function () {
   let owner, renter
 
   before(async function () {
-    ;[owner] = await ethers.getSigners()
+    [owner] = await ethers.getSigners()
 
     // Create a new wallet for the renter
     let renterWallet = ethers.Wallet.createRandom()
@@ -19,7 +25,7 @@ describe("SimpleRent integration Unit Tests", function () {
     renter = renterWallet.connect(ethers.provider)
   })
 
-  it("should check the ETH balance of the address 0xCB149308B6be829fD580Ff1c84Fb6C44C373B3FB", async () => {
+  it("should check the ETH balance of the address private key address", async () => {
     const [owner] = await ethers.getSigners()
     const addressToCheck = owner.address
     const balance = await provider.getBalance(addressToCheck)
