@@ -16,5 +16,7 @@ model users {
   name      String
   email     String   @unique
   image     String
+// TODO: change this in production to not store the password in plain text. THIS IS JUST A DEMO, remember
+  password String
   createdAt DateTime @default(now())
 }

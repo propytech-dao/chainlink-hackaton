@@ -1,15 +1,18 @@
-import { http, cookieStorage, createConfig, createStorage } from 'wagmi'
-import { mainnet, optimism, sepolia } from 'wagmi/chains'
-import { injected, metaMask, walletConnect } from 'wagmi/connectors'
+import { http, cookieStorage, createConfig, createStorage } from 'wagmi';
+import { mainnet, optimism, sepolia } from 'wagmi/chains';
+import { injected, metaMask, walletConnect } from 'wagmi/connectors';
 
 export const config = createConfig({
   chains: [mainnet, sepolia, optimism],
   connectors: [
     injected(),
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID!,
+
+    metaMask({
+      dappMetadata: {
+        name: 'propytech',
+        url: 'https://propytech.org',
+      },
     }),
-    metaMask(),
   ],
   storage: createStorage({
     storage: cookieStorage,
@@ -20,10 +23,10 @@ export const config = createConfig({
     [sepolia.id]: http(),
     [optimism.id]: http(),
   },
-})
+});
 
 declare module 'wagmi' {
   interface Register {
-    config: typeof config
+    config: typeof config;
   }
 }

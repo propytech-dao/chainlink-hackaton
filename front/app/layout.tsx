@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { cookieToInitialState } from 'wagmi'
 
-import { config } from './wagmi'
+import { config } from '../wagmi'
 import { Providers } from './providers'
 
 import './globals.css';
@@ -9,9 +9,9 @@ import { Inter, Amiri, Poppins } from 'next/font/google';
 
 export const metadata = {
   metadataBase: new URL('https://postgres-prisma.vercel.app'),
-  title: 'Propytech-dao',
+  title: 'Propytech',
   description:
-    'A simple Next.js app with Vercel Postgres as the database and Prisma as the ORM',
+    'Rental properties onchain',
 };
 
 const inter = Inter({
@@ -52,7 +52,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${amiri.variable} ${poppins.variable}`}
       >
-        <Providers initialState={initialState}>{children}</Providers>
+        <Providers initialState={initialState}>{children}</Providers>      
       </body>
     </html>
   );
