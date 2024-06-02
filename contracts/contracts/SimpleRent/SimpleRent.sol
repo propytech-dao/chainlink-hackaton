@@ -11,124 +11,128 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
  */
 
 contract SimpleRent {
-  struct Renting {
+  struct Rental {
+    uint256 orderId;
     address renter;
+    address nftAddress;
+    uint256 tokenId;
     address lender;
     uint256 rentValue; // per day
     uint256 rentDuration; // in days
     uint256 rentedAt;
     address rentToken;
   }
-  mapping(bytes32 => Renting) public rentings;
+  mapping(uint256 => Rental) public rentals;
   mapping(address => mapping(uint256 => address)) public tokenOwners; // nftAddress => tokenID => owner
+  uint256 public lastOrder = 0;
+
 
   event Lent(
+    uint256 indexed orderId,
     address indexed nftAddress,
     uint256 indexed tokenID,
-    address indexed renter,
+    address lender,
     uint256 rentValue,
     address rentToken
   );
   event Rented(
+    uint256 indexed orderId,
     address indexed nftAddress,
     uint256 indexed tokenID,
-    address indexed lender,
-    uint256 rentValue,
+    address renter,
+    uint256 totalRentAmount,
     uint256 rentDuration
   );
 
   /**
    * @notice Lend an NFT for renting
    * @param nftAddress The address of the ERC721 token contract
-   * @param tokenID The ID of the ERC721 token to lend
+   * @param tokenId The ID of the ERC721 token to lend
    * @param rentValue The rent value per day in the specified ERC20 token
    * @param rentToken The address of the ERC20 token used for rent payment
    */
-  function lend(address nftAddress, uint256 tokenID, uint256 rentValue, address rentToken) external {
+  function lend(address nftAddress, uint256 tokenId, uint256 rentValue, address rentToken) external {
     IERC721 nft = IERC721(nftAddress);
-    require(nft.ownerOf(tokenID) == msg.sender, "Caller is not the owner");
-    require(tokenOwners[nftAddress][tokenID] == address(0), "Token is already lent");
+    require(nft.ownerOf(tokenId) == msg.sender, "Caller is not the owner");
+    require(tokenOwners[nftAddress][tokenId] == address(0), "Token is already lent");
 
     // Transfer the NFT to the SimpleRent contract. It keeps custody
-    nft.transferFrom(msg.sender, address(this), tokenID);
+    nft.transferFrom(msg.sender, address(this), tokenId);
 
-    bytes32 identifier = keccak256(abi.encodePacked(nftAddress, tokenID));
-    rentings[identifier] = Renting({
+    lastOrder +=1;
+    rentals[lastOrder] = Rental({
+      orderId: lastOrder,
       renter: address(0),
       lender: msg.sender,
+      nftAddress: nftAddress,
+      tokenId: tokenId,
       rentValue: rentValue,
       rentDuration: 0,
       rentedAt: 0,
       rentToken: rentToken
     });
 
-    tokenOwners[nftAddress][tokenID] = msg.sender;
-    emit Lent(nftAddress, tokenID, msg.sender, rentValue, rentToken);
+    tokenOwners[nftAddress][tokenId] = msg.sender;
+    emit Lent(lastOrder, nftAddress, tokenId, msg.sender, rentValue, rentToken);
   }
 
   /**
    * @notice Rent a lent NFT
-   * @param nftAddress The address of the ERC721 token contract
-   * @param tokenID The ID of the ERC721 token to rent
+   * @param _orderId The ID of the created Rental order
    * @param rentDuration The duration of the rent in days
    */
-  function rent(address nftAddress, uint256 tokenID, uint256 rentDuration) external {
-    bytes32 identifier = keccak256(abi.encodePacked(nftAddress, tokenID));
-    Renting storage renting = rentings[identifier];
+  function rent(uint256 _orderId, uint256 rentDuration) external {
+    Rental storage rental = rentals[_orderId];
+    address nftAddress = rental.nftAddress;
+    uint256 tokenId = rental.tokenId;
+    require(tokenOwners[nftAddress][tokenId] != address(0), "Token is not lent");
+    require(rental.renter == address(0), "Token is already rented");
 
-    require(tokenOwners[nftAddress][tokenID] != address(0), "Token is not lent");
-    require(renting.renter == address(0), "Token is already rented");
-
-    IERC20 rentToken = IERC20(renting.rentToken);
-    uint256 totalRentAmount = renting.rentValue * rentDuration;
+    IERC20 rentToken = IERC20(rental.rentToken);
+    uint256 totalRentAmount = rental.rentValue * rentDuration;
     require(
-      rentToken.transferFrom(msg.sender, tokenOwners[nftAddress][tokenID], totalRentAmount),
+      rentToken.transferFrom(msg.sender, tokenOwners[nftAddress][tokenId], totalRentAmount),
       "Rent payment failed"
     );
 
-    renting.renter = msg.sender;
-    renting.rentDuration = rentDuration;
-    renting.rentedAt = block.timestamp;
+    rental.renter = msg.sender;
+    rental.rentDuration = rentDuration;
+    rental.rentedAt = block.timestamp;
 
-    emit Rented(nftAddress, tokenID, msg.sender, totalRentAmount, rentDuration);
+    emit Rented(_orderId, nftAddress, tokenId ,msg.sender, totalRentAmount, rentDuration);
   }
 
   /**
    * @notice Get details of a rental
-   * @param nftAddress The address of the ERC721 token contract
-   * @param tokenID The ID of the ERC721 token
+   * @param orderId The ID of the created Rental order
    * @return (address, address, uint256, uint256, uint256) Renter, lender, rent value, rent duration, rented at
    */
   function getRentalDetails(
-    address nftAddress,
-    uint256 tokenID
+    uint256 orderId
   ) external view returns (address, address, uint256, uint256, uint256) {
-    bytes32 identifier = keccak256(abi.encodePacked(nftAddress, tokenID));
-    Renting storage renting = rentings[identifier];
-    return (renting.renter, renting.lender, renting.rentValue, renting.rentDuration, renting.rentedAt);
+    Rental storage rental = rentals[orderId];
+    return (rental.renter, rental.lender, rental.rentValue, rental.rentDuration, rental.rentedAt);
   }
 
   /**
    * @notice End the rent of an NFT
-   * @param nftAddress The address of the ERC721 token contract
-   * @param tokenID The ID of the ERC721 token
+   * @param orderId The ID of the created Rental order
    */
-  function endRent(address nftAddress, uint256 tokenID) external {
-    require(tokenOwners[nftAddress][tokenID] == msg.sender, "Caller is not the owner");
-
-    bytes32 identifier = keccak256(abi.encodePacked(nftAddress, tokenID));
-    Renting storage renting = rentings[identifier];
-    require(renting.lender == msg.sender, "Token is not lent");
+  function endRent(uint256 orderId) external {
+    Rental storage rental = rentals[orderId];
+    address nftAddress = rental.nftAddress;
+    uint256 tokenId = rental.tokenId;
+    require(tokenOwners[nftAddress][tokenId] == msg.sender, "Caller is not the owner of nft");
+    require(rental.lender == msg.sender, "Token is not lent");
 
     // Check if rent duration has expired
-    require(block.timestamp >= renting.rentedAt + renting.rentDuration * 1 days, "Rent duration has not expired");
+    require(block.timestamp >= rental.rentedAt + rental.rentDuration * 1 days, "Rent duration has not expired");
 
     // Transfer the NFT back to the proper owner
     IERC721 nft = IERC721(nftAddress);
-    nft.transferFrom(address(this), msg.sender, tokenID);
+    nft.transferFrom(address(this), msg.sender, tokenId);
 
     // Clear the renting data
-    delete tokenOwners[nftAddress][tokenID];
-    delete rentings[identifier];
+    delete tokenOwners[nftAddress][tokenId];
   }
 }
