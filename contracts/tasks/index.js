@@ -1,5 +1,6 @@
 //exports.keepers = require('./automation')
 exports.FunctionsConsumer = require("./Functions-consumer")
+exports.Rental = require("./rental")
 exports.FunctionsBilling = require("./Functions-billing")
 exports.balance = require("./balance")
 exports.blockNumber = require("./block-number")
