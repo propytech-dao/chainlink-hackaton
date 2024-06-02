@@ -1,9 +1,15 @@
+import { headers } from 'next/headers'
+import { cookieToInitialState } from 'wagmi'
+
+import { config } from './wagmi'
+import { Providers } from './providers'
+
 import './globals.css';
 import { Inter, Amiri, Poppins } from 'next/font/google';
 
 export const metadata = {
   metadataBase: new URL('https://postgres-prisma.vercel.app'),
-  title: 'Vercel Postgres Demo with Prisma',
+  title: 'Propytech-dao',
   description:
     'A simple Next.js app with Vercel Postgres as the database and Prisma as the ORM',
 };
@@ -33,9 +39,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = cookieToInitialState(config, headers().get('cookie'))
   return (
     <html lang="en">
-      {/* TODO: adicionar o conector de carteira no topo, usando wagmii */}
+      {/* TODO: adicionar o conector de carteira no topo, usando wagmi */}
       {/* TODO: adicionar uma tela de perfil, com o set de algumas informações*/}
       {/* TODO: fazer a rota de API onde o usuário cria usa conta (o ideal seria com um auth da google por exemplo,
         mas podemos fazer uma autenticação simples primeiro com registro e login normal e fica de fallback)
@@ -45,7 +52,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${amiri.variable} ${poppins.variable}`}
       >
-        {children}
+        <Providers initialState={initialState}>{children}</Providers>
       </body>
     </html>
   );
