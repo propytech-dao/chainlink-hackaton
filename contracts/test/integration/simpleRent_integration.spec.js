@@ -14,6 +14,7 @@ describe("SimpleRent integration Unit Tests", function () {
   let MockUSDT, mockUSDT
   let SimpleRent, simpleRent
   let owner, renter
+  let lastOrderId
 
   before(async function () {
     [owner] = await ethers.getSigners()
@@ -68,9 +69,14 @@ describe("SimpleRent integration Unit Tests", function () {
     await mockUSDT.deployed()
   })
 
-  it("should deploy the SimpleRent contract", async function () {
+  it("should ATTACH the SimpleRent contract", async function () {
     SimpleRent = await ethers.getContractFactory("SimpleRent")
-    simpleRent = await SimpleRent.deploy()
+    simpleRent = await SimpleRent.attach(process.env.RENT_ADDRESS)
+    let orderId = await simpleRent.lastOrder();
+    console.log("last orderId:", orderId)
+    lastOrderId = orderId;
+    
+    
   })
 
   it("should lend the MockNFT", async function () {
@@ -80,12 +86,12 @@ describe("SimpleRent integration Unit Tests", function () {
     await mockNFT.connect(owner).approve(simpleRent.address, tokenID)
     await expect(await simpleRent.connect(owner).lend(nftAddress, tokenID, rentValue, mockUSDT.address))
       .to.emit(simpleRent, "Lent")
-      .withArgs(nftAddress, tokenID, owner.address, rentValue, mockUSDT.address)
+      .withArgs(lastOrderId.add(1), nftAddress, tokenID, owner.address, rentValue, mockUSDT.address)
 
     // Check the NFT ownership is transferred to the SimpleRent contract
     expect(await mockNFT.ownerOf(tokenID)).to.equal(simpleRent.address)
 
-    const rentingDetails = await simpleRent.getRentalDetails(nftAddress, tokenID)
+    const rentingDetails = await simpleRent.getRentalDetails(lastOrderId.add(1))
     console.log({ rentingDetails })
   })
 
@@ -123,14 +129,18 @@ describe("SimpleRent integration Unit Tests", function () {
       const totalRentAmount = rentValue.mul(rentDuration)
 
       // Rent the NFT
-      await expect(await simpleRent.connect(renter).rent(nftAddress, tokenID, rentDuration))
+      await expect(await simpleRent.connect(renter).rent(lastOrderId.add(1), rentDuration))
         .to.emit(simpleRent, "Rented")
-        .withArgs(nftAddress, tokenID, renter.address, totalRentAmount, rentDuration)
+        .withArgs(lastOrderId.add(1), nftAddress, tokenID, renter.address, totalRentAmount, rentDuration)
 
       // Verify that the renting details are correct
-      const rentingDetails = await simpleRent.getRentalDetails(nftAddress, tokenID)
+      const rentingDetails = await simpleRent.getRentalDetails(lastOrderId.add(1))
 
       console.log({ rentingDetails })
+    
+      console.log(`data feed into the simpleRent contract. To make a functions request over the data,
+        set the orderId to ${lastOrderId.add(1)} in the functions-request-config.js. So, the 
+      `)
     }
   })
 })
