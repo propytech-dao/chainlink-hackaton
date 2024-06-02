@@ -27,40 +27,79 @@ npx hardhat functions-request --network ethereumSepolia --contract 0xb1D07639645
 
 If necessary, it is possible to mine Sepolia Eth here: https://www.ethereum-ecosystem.com/faucets/ethereum-sepolia
 
-### Testing
+## Testing
+
+### setting up all contracts in a testnet
+
+This guide shows how to set it all up in the `localFunctionsTestnet`, but it should be similar
+to set it up on any testnet or mainnet.
 
 1. First, start the `localFunctionsTestnet` with `npm run startLocalFunctionsTestnet`.
 
-2.  Using the `localFunctionsTestnet`, deploy the consumer contract:
+
+2. The next step is to deploy the the `SimpleRent` and the `SimpleRentCheckin` contracts into this local testnet. First,
+the `SimpleRent` contract:
 
 ```
-npx hardhat functions-deploy-consumer --network localFunctionsTestnet
+➜  npx hardhat deploy-renter --network localFunctionsTestnet                                                                    
+secp256k1 unavailable, reverting to browser version
+Deploying SimpleRent contract to  localFunctionsTestnet
+
+__Compiling Contracts__
+Nothing to compile
+
+Waiting 1 blocks for transaction 0xc555a8eba3da4a42d067460b493becd4c18203dc7b33d95a7896abf9368fd942 to be confirmed...
+
+ deployed SimpleRent 0x18B4Dd97C06dE2BB6C9fc2f20b3C32C1E589d0B4 on localFunctionsTestnet
 ```
 
-3. Update the DON ID for the consumer contract that was just deployed (not sure if required?):
+Then, use the address of the `SimpleRent` deploy for the `SimpleCheckin`:
 
 ```
-npx hardhat functions-set-donid --network localFunctionsTestnet --contract <contract-address>
+➜  npx hardhat deploy-checkin --simple-rent-address  0x18B4Dd97C06dE2BB6C9fc2f20b3C32C1E589d0B4 --network localFunctionsTestnet     
+secp256k1 unavailable, reverting to browser version
+Deploying checkin contract to  localFunctionsTestnet
+
+__Compiling Contracts__
+Nothing to compile
+
+Waiting 1 blocks for transaction 0xf6642e6536521fed284ceb165c1a9f1068db56e9cc99184d19d865b51db12402 to be confirmed...
+
+ deployed SimpleRentCheckin 0x5714A58654688dA90433aa9458258cc30fECb341 on localFunctionsTestnet
 ```
 
-4. Fund the subscription:
+3. The integration tests can now be run over these contracts. Notice that there is an environment variable called `.env.test`.
+Pertinent contract addresses and RPC Url are provided there, to keep all variables easy to change from networks used.
+By default, it is applied to the `localFunctionsTestnet`.
+
+First tests to run, are the `simpleRent_integration.spec.js` to "fatten" the rental protocol with data:
+```
+npx hardhat test ./test/integration/simpleRent_integration.spec.js                                                                         06/01/24 - 11:07 
+```
+
+4. Fund subscription, passing the checkin contract as param (it is the consumer):
 
 ```
 npx hardhat functions-sub-create --network localFunctionsTestnet --amount 10 --contract <contract-address>
 ```
 
-5. Then, with the contract deployed and subid set it is possible to call it's address with a `sendRequest`, as follows.
-It will
+5. Then, with the contract deployed and subid set it is possible to call it's address with a `sendRequest`, as follows. Remember to set the `subid` to be subId generated from the `functions-sub-create` script from before. 
 
 ```
-npx hardhat functions-request --network localFunctionsTestnet --contract <contract-address> --subid 1
+npx hardhat request-checkin --network localFunctionsTestnet --contract <address>  --subid 1    
 ```
 
 6. Lastly, it is possible to read value sent to the contract:
 
 ```
-npx hardhat functions-read	--network localFunctionsTestnet --contract _address
+npx hardhat read-checkin --network localFunctionsTestnet --contract <address>
 ```
+
+The testing process feels too complicated? No worries. There is a single script that runs it all, printing along the way 
+the pertinent information in `test.sh`
+
+### Testing SimpleRent against Chainlink Functions
+
 
 #### Important "gotchas" of testing
 
