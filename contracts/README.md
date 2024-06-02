@@ -34,8 +34,11 @@ If necessary, it is possible to mine Sepolia Eth here: https://www.ethereum-ecos
 This guide shows how to set it all up in the `localFunctionsTestnet`, but it should be similar
 to set it up on any testnet or mainnet.
 
-1. First, start the `localFunctionsTestnet` with `npm run startLocalFunctionsTestnet`.
+The testing process below is a bit long. There is a single script that runs it all, printing along the way 
+the pertinent information in `test.sh`. Just remember to at least execute step 1 because the script assumes the step 1 os done.
 
+
+1. First, start the `localFunctionsTestnet` with `npm run startLocalFunctionsTestnet`, and set the encryption variables with `npx env-enc set`. If they are already set, load it all with `npx env-enc set-pw` 
 
 2. The next step is to deploy the the `SimpleRent` and the `SimpleRentCheckin` contracts into this local testnet. First,
 the `SimpleRent` contract:
@@ -95,8 +98,6 @@ npx hardhat request-checkin --network localFunctionsTestnet --contract <address>
 npx hardhat read-checkin --network localFunctionsTestnet --contract <address>
 ```
 
-The testing process feels too complicated? No worries. There is a single script that runs it all, printing along the way 
-the pertinent information in `test.sh`
 
 ### Testing SimpleRent against Chainlink Functions
 
