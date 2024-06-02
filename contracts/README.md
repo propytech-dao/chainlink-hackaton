@@ -86,7 +86,7 @@ npx hardhat functions-sub-create --network localFunctionsTestnet --amount 10 --c
 5. Then, with the contract deployed and subid set it is possible to call it's address with a `sendRequest`, as follows. Remember to set the `subid` to be subId generated from the `functions-sub-create` script from before. 
 
 ```
-npx hardhat request-checkin --network localFunctionsTestnet --contract <address>  --subid 1    
+npx hardhat request-checkin --network localFunctionsTestnet --contract <address>  --subid <number>    
 ```
 
 6. Lastly, it is possible to read value sent to the contract:
