@@ -1,0 +1,5 @@
+exports.deployCheckin = require("./deploy-checkin.js")
+exports.deployRenter = require("./deploy-renter.js")
+exports.readCheckin = require("./read-checkin.js")
+exports.requestCheckin = require("./request-checkin.js")
+exports.feedRent = require("./feed-rent.js")

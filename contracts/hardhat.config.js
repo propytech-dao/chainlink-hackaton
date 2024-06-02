@@ -4,8 +4,6 @@ require("hardhat-contract-sizer")
 require("./tasks")
 const { networks } = require("./networks")
 
-
-
 // Enable gas reporting (optional)
 const REPORT_GAS = process.env.REPORT_GAS?.toLowerCase() === "true" ? true : false
 
