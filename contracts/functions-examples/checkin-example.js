@@ -11,6 +11,8 @@ const orderId = args[0]
 
 // TODO: setup back-end to achieve vald state! This is just a boilerplate code
 const valid = true;
+
+
 // ABI encoding
 const encoded = ethers.AbiCoder.defaultAbiCoder().encode(
     ["uint256", "bool"],

@@ -37,13 +37,13 @@ export function LoginView() {
         Continue
       </button>
 
-      <div className="flex items-center justify-between w-full my-4">
+      {/* <div className="flex items-center justify-between w-full my-4">
         <div className="flex-grow h-px bg-gray-300"></div>
         <span className="mx-2 text-sm font-normal text-gray-500">ou</span>
         <div className="flex-grow h-px bg-gray-300"></div>
-      </div>
+      </div> */}
 
-      <div className="flex flex-col gap-3">
+      {/* <div className="flex flex-col gap-3">
         <Button className="flex items-center p-2 bg-white rounded-lg border border-gray-300 shadow-sm">
           <div className="w-5 h-5 bg-cover bg-no-repeat mr-2"></div>
           <span className="text-sm font-normal">Login with Email</span>
@@ -52,7 +52,7 @@ export function LoginView() {
           <div className="w-5 h-5 bg-cover bg-no-repeat mr-2"></div>
           <span className="text-sm font-normal">Login with Wallet</span>
         </Button>
-      </div>
+      </div> */}
     </main>
   );
 }

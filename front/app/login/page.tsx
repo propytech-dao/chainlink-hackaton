@@ -1,11 +1,9 @@
-'use client';
-
 import { LoginView } from '@/components/Login/LoginView';
 
 export default function Login() {
   return (
-    <body className="flex  max-w-md items-center justify-center m-auto">
+    <main className="flex  md:max-w-sm h-full items-center justify-center m-auto">
       <LoginView />
-    </body>
+    </main>
   );
 }
