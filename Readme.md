@@ -68,7 +68,8 @@ all the process of setting everything up in a local testnet, for debugging. This
 There are many use cases that we did not cover. PMS systems have handle the dates when the renters are coming, besides only the amount of days they are renting
 instantiated by the contract `SimpleRent` contract. No hotel or "AirBNB like" application will be able to make business without giving it's users the ability to choose which dates they want to rent instead of simply putting the amount of days they will rent it for. A smart contract would be able to keep the available dates updated on-chain, in a similar fashion to the checkin contract. PMS systems also have many custom checks that they have to do (room is clean? Is time of checkin valid?) that we did not implement. Theoretically, they can all be integrated to their API via a Chainlink Functions Consumer.
 
-
+The front-end integration with the smart contracts is still not there, besides the Chainlink Functions being integrated with the back-end. That is still 
+a necessity to achieve the product we want to build.
 
 We are looking forward into implementing our first rental solution in the real, with the payments being handled by smart contracts while keeping
 it synchronized with an off-chain system that handles the property management. Essentially, solving these integration problems of these two techs that seem disconnected.   

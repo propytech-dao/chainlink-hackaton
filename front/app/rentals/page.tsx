@@ -1,16 +1,33 @@
-// /app/rentals/index.tsx
-import RentalCard from '@/components/RentalCard';
-import React from 'react';
-
+import RentalCard from "@/components/RentalCard";
 export default function Rentals() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <div className="">
-        <h1 className="text-left text-md text-[#222]  font-poppins font-medium tracking-tight ">
-          rentals available in your area:
-        </h1>
-        <RentalCard />
-      </div>
+    <div className="flex min-h-screen font-poppins">
+      <aside className="w-64 bg-gray-800 text-white flex flex-col p-4">
+        <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+        <nav>
+          <ul>
+            <li className="mb-2">
+              <a href="#" className="block py-2 px-4 rounded hover:bg-gray-700">Home</a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="block py-2 px-4 rounded hover:bg-gray-700">Rentals</a>
+            </li>
+            <li className="mb-2">
+              <a href="#" className="block py-2 px-4 rounded hover:bg-gray-700">Settings</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <main className="flex-1 p-6 bg-gray-100">
+        <header className="mb-6">
+          <h1 className="text-3xl font-semibold text-gray-900">Rentals Available in Your Area</h1>
+        </header>
+        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <RentalCard />
+     
+          {/* Add more RentalCard components as needed */}
+        </section>
+      </main>
     </div>
   );
 }

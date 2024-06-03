@@ -9,15 +9,16 @@ export default function RentalCard() {
   const [isPending, startTransition] = useTransition();
 
   return (
-    <div className="max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
-      <div className="md:flex">
-        <div className="md:shrink-0">
+    <div className="max-w-sm mx-auto bg-white rounded-xl font-poppins shadow-md overflow-hidden md:max-w-2xl">
+      <div className="flex flex-col">
+        <div className="relative w-full h-48 md:h-auto ">
           <Image
-            width={150}
-            height={150}
-            className="h-48 w-full object-cover md:h-full md:w-48"
-            src="https://placehold.co/600x400/000000/FFFFFF/png"
+            src="/apartment.webp"
             alt="Rental property"
+            layout="responsive"
+            width={600}
+            height={400}
+            className="object-cover"
           />
         </div>
         <div className="p-8">
@@ -32,7 +33,7 @@ export default function RentalCard() {
           <button
             onClick={() => {
               startTransition(() => {
-                router.push('/rental-details');
+                router.push('/rentals/1');
               });
             }}
             className="mt-4 px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
