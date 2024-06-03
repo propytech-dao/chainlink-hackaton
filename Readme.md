@@ -1,5 +1,7 @@
 # Propytech
 
+**NOTICE For the technical reader: the run instructions are in /front and /contracts folders** 
+
 Opportunity: There are already solutions that do the heavy lifting of renting NFTs (such as [ReNFT protocol](https://www.renft.io/)). They abstract the complexity of handling rentals of non-fungible tokens on-chain. By building on top of the rental infrastructure of ReNFT, In this project we wanted to solve the problem of renting real estate via smart contracts, while keeping the legacy tech components and compliance of the rental tied to the blockchain.
 
 Our idea: a real estate renting platform, with a front-end UX that is familiar to most people that rented on AirBNB, but renting the property is done on the smart contract while the KYC verification, attestation of NFC cards to unlock doors, and other post check-in rules are handled off-chain in the renter system. All in a easy way to tie on-chain and off-chain systems.
@@ -27,7 +29,6 @@ Our tech stack went as follows:
 - Nextjs, with postgres databse (acts as both the front-end and back-end)
 - Chainlink Function
 - Solidity Smart contracts
-
 
 
 ### Smart contracts
