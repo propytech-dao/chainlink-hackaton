@@ -18,5 +18,6 @@ model users {
   image     String
 // TODO: change this in production to not store the password in plain text. THIS IS JUST A DEMO, remember
   password String
+  walletAddress String
   createdAt DateTime @default(now())
 }

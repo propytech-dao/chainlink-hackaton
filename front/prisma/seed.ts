@@ -7,8 +7,10 @@ async function main() {
       update: {},
       create: {
         name: 'test_user',
-        email: '',
+        email: 'pedrohba18@gmail.com',
         image: '',
+        password: "123",
+        walletAddress: "0xCB149308B6be829fD580Ff1c84Fb6C44C373B3FB"
       },
     }),
   ]);

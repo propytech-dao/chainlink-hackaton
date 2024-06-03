@@ -6,7 +6,7 @@ const BACKEND_API_KEY = ""
 
 const requestConfig = {
   // String containing the source code to be executed
-  source: fs.readFileSync("./functions-examples/checkin-example.js").toString(),
+  source: fs.readFileSync("./functions-examples/checkin-backend.js").toString(),
   // source: fs.readFileSync("./API-request-example.js").toString(),
   // Location of source code (only Inline is currently supported)
   codeLocation: Location.Inline,

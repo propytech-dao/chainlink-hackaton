@@ -101,6 +101,7 @@ npx hardhat read-checkin --network localFunctionsTestnet --contract <address>
 
 ### Testing SimpleRent against Chainlink Functions
 
+To test only the script that is going to answer the contract, try `npx hardhat functions-simulate-script` after configuring the `Functions-request-config.js`
 
 #### Important "gotchas" of testing
 
