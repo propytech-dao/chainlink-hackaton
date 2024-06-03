@@ -1,17 +1,17 @@
-import { headers } from 'next/headers'
-import { cookieToInitialState } from 'wagmi'
+import { headers } from 'next/headers';
+import { cookieToInitialState } from 'wagmi';
 
-import { config } from '../wagmi'
-import { Providers } from './providers'
+import { config } from '../wagmi';
+import { Providers } from './providers';
 
 import './globals.css';
 import { Inter, Amiri, Poppins } from 'next/font/google';
+import Navbar from '../components/navbar';
 
 export const metadata = {
   metadataBase: new URL('https://postgres-prisma.vercel.app'),
   title: 'Propytech',
-  description:
-    'Rental properties onchain',
+  description: 'Rental properties onchain',
 };
 
 const inter = Inter({
@@ -39,7 +39,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const initialState = cookieToInitialState(config, headers().get('cookie'))
+  const initialState = cookieToInitialState(config, headers().get('cookie'));
   return (
     <html lang="en">
       {/* TODO: adicionar o conector de carteira no topo, usando wagmi */}
@@ -52,7 +52,8 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${amiri.variable} ${poppins.variable}`}
       >
-        <Providers initialState={initialState}>{children}</Providers>      
+        <Navbar></Navbar>
+        <Providers initialState={initialState}>{children}</Providers>
       </body>
     </html>
   );
