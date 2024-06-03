@@ -63,6 +63,7 @@ In the `/contracts` folder, there are many scripts available and a full document
 all the process of setting everything up in a local testnet, for debugging. This script is particularly useful, because it handles automatically a lot of the setup process of a local testnet that Chainlink Functions can answer calls to. Some changes to it could be made to make it as an example for the [Chainlink functions starter kit](https://github.com/smartcontractkit/functions-hardhat-starter-kit) on how to test the integration of contract and off-chain call answers in a single command call. 
 
 
+
 ## What is next for Propytech
 
 There are many use cases that we did not cover. PMS systems have handle the dates when the renters are coming, besides only the amount of days they are renting

@@ -8,7 +8,7 @@ const ethers = await import("npm:ethers@6.10.0");
 const orderId = args[0];
 
 // Call the API endpoint to check the order status
-const response = await fetch('http://localhost:3001/api/handle-checkin-example', {
+const response = await fetch('http://localhost:3000/api/handle-checkin-example', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
